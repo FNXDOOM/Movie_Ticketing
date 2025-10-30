@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .booking-container {
+        max-width: 600px;
+        margin: 2rem auto;
+    }
+
+    .booking-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .booking-title {
+        text-align: center;
+        font-size: 2rem;
+        color: #667eea;
+        margin-bottom: 2rem;
+    }
+
+    .show-info {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+    }
+
+    .show-info-item {
+        display: flex;
+        justify-content: space-between;
+        margin: 0.8rem 0;
+        font-size: 1.1rem;
+    }
+
+    .show-info-label {
+        color: #666;
+        font-weight: 500;
+    }
+
+    .show-info-value {
+        color: #333;
+        font-weight: 600;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #333;
+        font-weight: 500;
+        font-size: 1.1rem;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 1rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 5px;
+        font-size: 1.1rem;
+        transition: border-color 0.3s;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: #667eea;
+    }
+
+    .price-calculator {
+        background: #e8f5e9;
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin: 1.5rem 0;
+        border: 2px solid #4caf50;
+    }
+
+    .price-row {
+        display: flex;
+        justify-content: space-between;
+        margin: 0.5rem 0;
+        font-size: 1.1rem;
+    }
+
+    .total-price {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #2e7d32;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 2px dashed #4caf50;
+    }
+
+    .btn-book {
+        width: 100%;
+        padding: 1.2rem;
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 1.2rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s;
+        margin-top: 1rem;
+    }
+
+    .btn-book:hover {
+        background: #5568d3;
+    }
+
+    .btn-back {
+        width: 100%;
+        padding: 1rem;
+        background: #e0e0e0;
+        color: #333;
+        border: none;
+        border-radius: 5px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s;
+        margin-top: 0.5rem;
+        text-decoration: none;
+        display: block;
+        text-align: center;
+    }
+
+    .btn-back:hover {
+        background: #d0d0d0;
+    }
+</style>
+
+<div class="booking-container">
+    <div class="booking-card">
+        <h2 class="booking-title">🎟️ Book Tickets</h2>
+        
+        <div class="show-info">
+            <div class="show-info-item">
+                <span class="show-info-label">Movie:</span>
+                <span class="show-info-value">{{ show.movie.title }}</span>
+            </div>
+            <div class="show-info-item">
+                <span class="show-info-label">Show Time:</span>
+                <span class="show-info-value">{{ show.show_time|date:"d M, Y - h:i A" }}</span>
+            </div>
+            <div class="show-info-item">
+                <span class="show-info-label">Screen:</span>
+                <span class="show-info-value">{{ show.screen }}</span>
+            </div>
+            <div class="show-info-item">
+                <span class="show-info-label">Price per seat:</span>
+                <span class="show-info-value">₹{{ show.price }}</span>
+            </div>
+            <div class="show-info-item">
+                <span class="show-info-label">Available Seats:</span>
+                <span class="show-info-value">{{ show.available_seats }}</span>
+            </div>
+        </div>
+
+        <form method="POST" id="bookingForm">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="seats">Number of Seats:</label>
+                <input type="number" name="seats" id="seats" min="1" max="{{ show.available_seats }}" value="1" required>
+            </div>
+
+            <div class="price-calculator">
+                <div class="price-row">
+                    <span>Seats:</span>
+                    <span id="seatsCount">1</span>
+                </div>
+                <div class="price-row">
+                    <span>Price per seat:</span>
+                    <span>₹{{ show.price }}</span>
+                </div>
+                <div class="price-row total-price">
+                    <span>Total Amount:</span>
+                    <span id="totalPrice">₹{{ show.price }}</span>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-book">Confirm Booking</button>
+            <a href="{% url 'movie_detail' show.movie.id %}" class="btn-back">Cancel</a>
+        </form>
+    </div>
+</div>
+
+<script>
+    const seatsInput = document.getElementById('seats');
+    const seatsCount = document.getElementById('seatsCount');
+    const totalPrice = document.getElementById('totalPrice');
+    const pricePerSeat = {{ show.price }};
+
+    seatsInput.addEventListener('input', function() {
+        const seats = parseInt(this.value) || 0;
+        seatsCount.textContent = seats;
+        totalPrice.textContent = '₹' + (seats * pricePerSeat);
+    });
+</script>
+{% endblock %}

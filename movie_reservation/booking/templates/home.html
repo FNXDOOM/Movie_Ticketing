@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .hero {
+        text-align: center;
+        padding: 3rem 0;
+        color: #667eea;
+    }
+
+    .hero h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .hero p {
+        font-size: 1.2rem;
+        color: #666;
+    }
+
+    .movies-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .movie-card {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+        cursor: pointer;
+    }
+
+    .movie-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .movie-poster {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 3rem;
+    }
+
+    .movie-poster img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .movie-info {
+        padding: 1.5rem;
+    }
+
+    .movie-title {
+        font-size: 1.3rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        color: #333;
+    }
+
+    .movie-meta {
+        display: flex;
+        gap: 1rem;
+        margin: 0.5rem 0;
+        font-size: 0.9rem;
+        color: #666;
+    }
+
+    .movie-genre {
+        background: #f0f0f0;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+    }
+
+    .movie-rating {
+        color: #ffd700;
+        font-weight: bold;
+    }
+
+    .movie-description {
+        color: #666;
+        font-size: 0.95rem;
+        margin: 1rem 0;
+        line-height: 1.5;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .no-movies {
+        text-align: center;
+        padding: 3rem;
+        color: #666;
+        font-size: 1.2rem;
+    }
+</style>
+
+<div class="hero">
+    <h1>🎬 Welcome to MovieFlix</h1>
+    <p>Book your favorite movies now!</p>
+</div>
+
+{% if movies %}
+<div class="movies-grid">
+    {% for movie in movies %}
+    <div class="movie-card" onclick="window.location.href='{% url 'movie_detail' movie.id %}'">
+        <div class="movie-poster">
+            {% if movie.poster %}
+                <img src="{{ movie.poster.url }}" alt="{{ movie.title }}">
+            {% else %}
+                🎥
+            {% endif %}
+        </div>
+        <div class="movie-info">
+            <div class="movie-title">{{ movie.title }}</div>
+            <div class="movie-meta">
+                <span class="movie-genre">{{ movie.genre }}</span>
+                <span class="movie-rating">⭐ {{ movie.rating }}</span>
+            </div>
+            <div class="movie-description">{{ movie.description }}</div>
+            <a href="{% url 'movie_detail' movie.id %}" class="btn btn-primary" style="margin-top: 1rem; width: 100%; text-align: center;">View Shows</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="no-movies">
+    <p>No movies available at the moment. Check back soon!</p>
+</div>
+{% endif %}
+{% endblock %}

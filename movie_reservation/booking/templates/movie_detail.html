@@ -1,0 +1,207 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .movie-detail {
+        display: grid;
+        grid-template-columns: 350px 1fr;
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .movie-poster-large {
+        width: 100%;
+        height: 500px;
+        border-radius: 10px;
+        object-fit: cover;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 5rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .movie-poster-large img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+
+    .movie-details {
+        padding: 1rem;
+    }
+
+    .movie-title-large {
+        font-size: 2.5rem;
+        color: #333;
+        margin-bottom: 1rem;
+    }
+
+    .movie-meta-large {
+        display: flex;
+        gap: 1.5rem;
+        margin: 1rem 0;
+        flex-wrap: wrap;
+    }
+
+    .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #f8f9fa;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        font-weight: 500;
+    }
+
+    .movie-description-large {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #555;
+        margin: 2rem 0;
+    }
+
+    .shows-section {
+        margin-top: 2rem;
+    }
+
+    .shows-title {
+        font-size: 1.8rem;
+        color: #333;
+        margin-bottom: 1rem;
+        border-bottom: 3px solid #667eea;
+        padding-bottom: 0.5rem;
+    }
+
+    .shows-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+    }
+
+    .show-card {
+        background: white;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 1.5rem;
+        transition: all 0.3s;
+    }
+
+    .show-card:hover {
+        border-color: #667eea;
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        transform: translateY(-5px);
+    }
+
+    .show-time {
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: #667eea;
+        margin-bottom: 0.5rem;
+    }
+
+    .show-details {
+        color: #666;
+        margin: 0.5rem 0;
+    }
+
+    .show-price {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #28a745;
+        margin: 1rem 0;
+    }
+
+    .seats-available {
+        color: #666;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+
+    .no-shows {
+        text-align: center;
+        padding: 3rem;
+        color: #666;
+        font-size: 1.2rem;
+        background: #f8f9fa;
+        border-radius: 10px;
+    }
+
+    @media (max-width: 768px) {
+        .movie-detail {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="movie-detail">
+    <div class="movie-poster-large">
+        {% if movie.poster %}
+            <img src="{{ movie.poster.url }}" alt="{{ movie.title }}">
+        {% else %}
+            🎥
+        {% endif %}
+    </div>
+    
+    <div class="movie-details">
+        <h1 class="movie-title-large">{{ movie.title }}</h1>
+        
+        <div class="movie-meta-large">
+            <div class="meta-item">
+                <span>⭐</span>
+                <span>{{ movie.rating }}/10</span>
+            </div>
+            <div class="meta-item">
+                <span>🎭</span>
+                <span>{{ movie.genre }}</span>
+            </div>
+            <div class="meta-item">
+                <span>⏱️</span>
+                <span>{{ movie.duration }} mins</span>
+            </div>
+            <div class="meta-item">
+                <span>📅</span>
+                <span>{{ movie.release_date }}</span>
+            </div>
+        </div>
+        
+        <div class="movie-description-large">
+            {{ movie.description }}
+        </div>
+    </div>
+</div>
+
+<div class="shows-section">
+    <h2 class="shows-title">Available Shows</h2>
+    
+    {% if shows %}
+    <div class="shows-grid">
+        {% for show in shows %}
+        <div class="show-card">
+            <div class="show-time">{{ show.show_time|date:"d M, Y - h:i A" }}</div>
+            <div class="show-details">
+                <strong>Screen:</strong> {{ show.screen }}
+            </div>
+            <div class="show-price">₹{{ show.price }}</div>
+            <div class="seats-available">
+                {{ show.available_seats }} seats available
+            </div>
+            {% if user.is_authenticated %}
+                <a href="{% url 'book_ticket' show.id %}" class="btn btn-primary" style="width: 100%; text-align: center;">Book Now</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-secondary" style="width: 100%; text-align: center;">Login to Book</a>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="no-shows">
+        <p>No shows available for this movie at the moment.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

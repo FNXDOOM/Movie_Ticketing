@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Movie Reservation System{% endblock %}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .navbar-menu {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .navbar-menu a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .navbar-menu a:hover {
+            color: #667eea;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .messages {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 1000;
+            max-width: 400px;
+        }
+
+        .alert {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 5px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .content {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="{% url 'home' %}" class="navbar-brand">🎬 MovieFlix</a>
+        <div class="navbar-menu">
+            <a href="{% url 'home' %}">Home</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'my_bookings' %}">My Bookings</a>
+                <span>Hello, {{ user.username }}!</span>
+                <a href="{% url 'logout' %}" class="btn btn-secondary">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+                <a href="{% url 'register' %}" class="btn btn-secondary">Register</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+    <script>
+        setTimeout(() => {
+            const messages = document.querySelector('.messages');
+            if (messages) {
+                messages.style.display = 'none';
+            }
+        }, 5000);
+    </script>
+</body>
+</html>

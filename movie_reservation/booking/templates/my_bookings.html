@@ -1,0 +1,203 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .bookings-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .bookings-title {
+        font-size: 2.5rem;
+        color: #667eea;
+        margin-bottom: 0.5rem;
+    }
+
+    .bookings-subtitle {
+        color: #666;
+        font-size: 1.1rem;
+    }
+
+    .bookings-list {
+        display: grid;
+        gap: 1.5rem;
+    }
+
+    .booking-card {
+        background: white;
+        border-radius: 10px;
+        padding: 2rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 2rem;
+        align-items: center;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .booking-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+
+    .booking-icon {
+        font-size: 3rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        width: 80px;
+        height: 80px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .booking-details {
+        flex: 1;
+    }
+
+    .booking-movie {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+
+    .booking-info {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .booking-info-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+
+    .booking-label {
+        font-size: 0.85rem;
+        color: #666;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .booking-value {
+        font-size: 1rem;
+        color: #333;
+        font-weight: 600;
+    }
+
+    .booking-price {
+        text-align: right;
+    }
+
+    .price-amount {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #28a745;
+    }
+
+    .price-label {
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    .booking-status {
+        background: #d4edda;
+        color: #155724;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 600;
+        text-align: center;
+        margin-top: 0.5rem;
+    }
+
+    .no-bookings {
+        text-align: center;
+        padding: 4rem;
+        background: #f8f9fa;
+        border-radius: 10px;
+    }
+
+    .no-bookings-icon {
+        font-size: 5rem;
+        margin-bottom: 1rem;
+    }
+
+    .no-bookings-text {
+        font-size: 1.3rem;
+        color: #666;
+        margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .booking-card {
+            grid-template-columns: 1fr;
+            text-align: center;
+        }
+
+        .booking-icon {
+            margin: 0 auto;
+        }
+
+        .booking-price {
+            text-align: center;
+        }
+    }
+</style>
+
+<div class="bookings-header">
+    <h1 class="bookings-title">🎟️ My Bookings</h1>
+    <p class="bookings-subtitle">View all your movie ticket bookings</p>
+</div>
+
+{% if bookings %}
+<div class="bookings-list">
+    {% for booking in bookings %}
+    <div class="booking-card">
+        <div class="booking-icon">🎬</div>
+        
+        <div class="booking-details">
+            <div class="booking-movie">{{ booking.show.movie.title }}</div>
+            
+            <div class="booking-info">
+                <div class="booking-info-item">
+                    <span class="booking-label">Show Time</span>
+                    <span class="booking-value">{{ booking.show.show_time|date:"d M, Y" }}</span>
+                    <span class="booking-value">{{ booking.show.show_time|date:"h:i A" }}</span>
+                </div>
+                
+                <div class="booking-info-item">
+                    <span class="booking-label">Screen</span>
+                    <span class="booking-value">{{ booking.show.screen }}</span>
+                </div>
+                
+                <div class="booking-info-item">
+                    <span class="booking-label">Seats Booked</span>
+                    <span class="booking-value">{{ booking.seats_booked }} seat(s)</span>
+                </div>
+                
+                <div class="booking-info-item">
+                    <span class="booking-label">Booked On</span>
+                    <span class="booking-value">{{ booking.booking_date|date:"d M, Y" }}</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="booking-price">
+            <div class="price-amount">₹{{ booking.total_price }}</div>
+            <div class="price-label">Total Amount</div>
+            <div class="booking-status">Confirmed</div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="no-bookings">
+    <div class="no-bookings-icon">🎭</div>
+    <div class="no-bookings-text">You haven't made any bookings yet!</div>
+    <a href="{% url 'home' %}" class="btn btn-primary">Browse Movies</a>
+</div>
+{% endif %}
+{% endblock %}
