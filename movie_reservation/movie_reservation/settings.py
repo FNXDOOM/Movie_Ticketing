@@ -77,8 +77,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'movie_reservation_db',
-        'USER': 'nikhil',
-        'PASSWORD': 'nikhil123',
+        'USER': 'Username',
+        'PASSWORD': 'Password',
         'HOST': 'localhost',
         'PORT': '5432',
     }
