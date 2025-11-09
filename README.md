@@ -120,4 +120,3 @@ Follow these steps to add movies and showtimes through the Django admin interfac
 - For database connection issues, verify PostgreSQL is running and credentials are correct
 - Check Django error logs for detailed error messages
 
-### Project Url: https://github.com/FNXDOOM/Movie_Ticketing.git
