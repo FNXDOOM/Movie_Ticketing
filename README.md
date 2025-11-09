@@ -120,6 +120,3 @@ Follow these steps to add movies and showtimes through the Django admin interfac
 - For database connection issues, verify PostgreSQL is running and credentials are correct
 - Check Django error logs for detailed error messages
 
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
