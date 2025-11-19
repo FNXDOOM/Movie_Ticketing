@@ -120,3 +120,5 @@ Follow these steps to add movies and showtimes through the Django admin interfac
 - For database connection issues, verify PostgreSQL is running and credentials are correct
 - Check Django error logs for detailed error messages
 
+## Url
+url link: https://roadmap.sh/projects/movie-reservation-system
